@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:for_hour/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,7 +21,6 @@ class _LoginPageState extends State<LoginPage> {
               ConstrainedBox(
                   constraints: const BoxConstraints.tightFor(width: 250),
                   child: const TextField(
-                    obscureText: true,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Email Address',
@@ -38,12 +38,16 @@ class _LoginPageState extends State<LoginPage> {
                   )),
               const SizedBox(height: 60),
               ConstrainedBox(
-                  constraints: const BoxConstraints.tightFor(width: 280, height: 50),
+                  constraints:
+                      const BoxConstraints.tightFor(width: 280, height: 50),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xff9b1536),
                         textStyle: const TextStyle(fontSize: 20)),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const HomePage()));
+                    },
                     child: const Text('Login'),
                   )),
             ]),
