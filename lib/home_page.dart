@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:for_hour/login_page.dart';
 import 'package:for_hour/register_page.dart';
@@ -20,6 +21,14 @@ class _HomePageState extends State<HomePage> {
     'Curso Online',
     'Curso Online'
   ];
+
+  _signOut() async {
+    await FirebaseAuth.instance.signOut();
+
+    if (!mounted) return;
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const LoginPage()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,14 +139,11 @@ class _HomePageState extends State<HomePage> {
                         const BorderSide(width: 3.5, color: Color(0xff9b1536)),
                     elevation: 8,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12), // <-- Radius
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     backgroundColor: Colors.white,
                     textStyle: const TextStyle(fontSize: 20)),
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const LoginPage()));
-                },
+                onPressed: () => _signOut(),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -157,31 +163,31 @@ class _HomePageState extends State<HomePage> {
       ),
       const SizedBox(height: 20),
       Expanded(
-          child: Material(
-        color: const Color(0xff9b1536),
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-        elevation: 8,
-        child: Container(
-            padding: const EdgeInsets.only(top: 4),
-            child: ListView.separated(
-              padding: const EdgeInsets.all(16),
-              separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(),
-              itemCount: entries.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.white,
-                  ),
-                  height: 80,
-                  child: Center(
-                      child: Text(entries[index],
-                          style: const TextStyle(fontSize: 20))),
-                );
-              },
-        ))),
+        child: Material(
+            color: const Color(0xff9b1536),
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+            elevation: 8,
+            child: Container(
+                padding: const EdgeInsets.only(top: 4),
+                child: ListView.separated(
+                  padding: const EdgeInsets.all(16),
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const Divider(),
+                  itemCount: entries.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                      ),
+                      height: 80,
+                      child: Center(
+                          child: Text(entries[index],
+                              style: const TextStyle(fontSize: 20))),
+                    );
+                  },
+                ))),
       )
     ]))));
   }

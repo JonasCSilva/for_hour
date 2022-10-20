@@ -13,25 +13,27 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
-  login() async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
-      if (!mounted) return;
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const HomePage()));
-    } on FirebaseAuthException catch (e) {
-      print(e);
+  _login() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: _emailController.text, password: _passwordController.text);
+        if (!mounted) return;
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const HomePage()));
+      } on FirebaseAuthException catch (e) {
+        print(e);
+      }
     }
   }
 
@@ -50,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                   ConstrainedBox(
                       constraints: const BoxConstraints.tightFor(width: 250),
                       child: TextFormField(
-                        controller: emailController,
+                        controller: _emailController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter some text';
@@ -66,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                   ConstrainedBox(
                       constraints: const BoxConstraints.tightFor(width: 250),
                       child: TextFormField(
-                        controller: passwordController,
+                        controller: _passwordController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter some text';
@@ -87,11 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff9b1536),
                             textStyle: const TextStyle(fontSize: 20)),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            login();
-                          }
-                        },
+                        onPressed: () => _login(),
                         child: const Text('Login'),
                       )),
                 ]),
