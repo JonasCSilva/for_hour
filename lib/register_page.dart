@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:for_hour/home_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -17,11 +16,10 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 IconButton(
-                    iconSize: 36,                    onPressed: () {
+                    iconSize: 36,
+                    onPressed: () {
                       Navigator.of(context).pop();
                     },
                     icon: const Icon(
@@ -57,8 +55,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         backgroundColor: const Color(0xff9b1536),
                         textStyle: const TextStyle(fontSize: 20)),
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const HomePage()));
+                      /* Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const HomePage())); */
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Not implemented!'),
+                      ));
                     },
                     child: const Text('Anexar certificado'),
                   )),
@@ -71,8 +72,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         backgroundColor: const Color(0xff9b1536),
                         textStyle: const TextStyle(fontSize: 28)),
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const HomePage()));
+                      /* Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const HomePage())); */
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Not implemented!'),
+                      ));
                     },
                     child: const Text('Enviar'),
                   )),

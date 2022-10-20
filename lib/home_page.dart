@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:for_hour/login_page.dart';
 import 'package:for_hour/register_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,10 +23,6 @@ class _HomePageState extends State<HomePage> {
 
   _signOut() async {
     await FirebaseAuth.instance.signOut();
-
-    if (!mounted) return;
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const LoginPage()));
   }
 
   @override
