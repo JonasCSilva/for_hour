@@ -22,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
       DocumentReference doc = await FirebaseFirestore.instance
           .collection("users/tIeMjnsFX2Ur69clWHgJvCxxltc2/certificates")
           .add({
-        "hours": _hoursController.text,
+        "hours": int.parse(_hoursController.text),
         "category": _categoryController.text,
       });
 

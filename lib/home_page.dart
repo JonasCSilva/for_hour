@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:for_hour/register_page.dart';
@@ -10,19 +11,35 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<String> entries = <String>[
-    'Curso Online',
-    'Curso Online',
-    'Estágio',
-    'Curso Online',
-    'Curso Online',
-    'Estágio',
-    'Curso Online',
-    'Curso Online'
+  List<Map<String, dynamic>> _entries = <Map<String, dynamic>>[
+    {'hours': 40, 'category': 'Course'},
+    {'hours': 60, 'category': 'Internship'}
   ];
+
+  num _hours = 0;
 
   _signOut() async {
     await FirebaseAuth.instance.signOut();
+  }
+
+  @override
+  void initState() {
+    FirebaseFirestore.instance
+        .collection("users/tIeMjnsFX2Ur69clWHgJvCxxltc2/certificates")
+        .get()
+        .then((event) {
+      final List<Map<String, dynamic>> test = [];
+      num test2 = 0;
+      for (var doc in event.docs) {
+        test.add(doc.data());
+        test2 += doc.data()['hours'];
+      }
+      setState(() {
+        _entries = test;
+        _hours = test2;
+      });
+    });
+    super.initState();
   }
 
   @override
@@ -70,19 +87,19 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Text('Horas cadastradas'),
-                                  Text('178h',
-                                      style: TextStyle(
+                                children: [
+                                  const Text('Horas cadastradas'),
+                                  Text('${_hours.toString()}h',
+                                      style: const TextStyle(
                                           fontSize: 26,
                                           fontWeight: FontWeight.w700))
                                 ]),
                             Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Text('Horas Restantes'),
-                                  Text('60h',
-                                      style: TextStyle(
+                                children: [
+                                  const Text('Horas Restantes'),
+                                  Text('${(238 - _hours).toString()}h',
+                                      style: const TextStyle(
                                           fontSize: 26,
                                           fontWeight: FontWeight.w700))
                                 ])
@@ -169,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.all(16),
                   separatorBuilder: (BuildContext context, int index) =>
                       const Divider(),
-                  itemCount: entries.length,
+                  itemCount: _entries.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                       decoration: BoxDecoration(
@@ -178,8 +195,24 @@ class _HomePageState extends State<HomePage> {
                       ),
                       height: 80,
                       child: Center(
-                          child: Text(entries[index],
-                              style: const TextStyle(fontSize: 20))),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                            Text(_entries[index]['hours'].toString(),
+                                style: const TextStyle(fontSize: 18)),
+                            Text(_entries[index]['category'],
+                                style: const TextStyle(fontSize: 18)),
+                            Text(
+                                _entries[index]['isValidadated'] == null
+                                    ? 'Não validado'
+                                    : 'Validado',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color:
+                                        _entries[index]['isValidated'] == null
+                                            ? Colors.red
+                                            : Colors.green))
+                          ])),
                     );
                   },
                 ))),
