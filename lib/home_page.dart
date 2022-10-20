@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                             Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: const [
-                                  Text('Horas faltantes'),
+                                  Text('Horas Restantes'),
                                   Text('60h',
                                       style: TextStyle(
                                           fontSize: 26,
