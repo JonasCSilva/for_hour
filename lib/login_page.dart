@@ -39,11 +39,14 @@ class _LoginPageState extends State<LoginPage> {
       child: Form(
           key: _formKey,
           child: Center(
+              child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 400),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  const Expanded(flex: 1, child: SizedBox.shrink()),
                   const Text('Bem-vindo', style: TextStyle(fontSize: 50)),
-                  const SizedBox(height: 120),
+                  const Expanded(flex: 4, child: SizedBox.shrink()),
                   ConstrainedBox(
                       constraints: const BoxConstraints.tightFor(width: 250),
                       child: TextFormField(
@@ -59,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                           labelText: 'Email Address',
                         ),
                       )),
-                  const SizedBox(height: 30),
+                  const Expanded(flex: 1, child: SizedBox.shrink()),
                   ConstrainedBox(
                       constraints: const BoxConstraints.tightFor(width: 250),
                       child: TextFormField(
@@ -76,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                           labelText: 'Password',
                         ),
                       )),
-                  const SizedBox(height: 60),
+                  const Expanded(flex: 2, child: SizedBox.shrink()),
                   ConstrainedBox(
                       constraints:
                           const BoxConstraints.tightFor(width: 280, height: 50),
@@ -87,8 +90,9 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () => _login(),
                         child: const Text('Login'),
                       )),
+                  const Expanded(flex: 1, child: SizedBox.shrink()),
                 ]),
-          )),
+          ))),
     ));
   }
 }

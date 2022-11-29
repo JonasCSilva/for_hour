@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(12), // <-- Radius
                     ),
                     backgroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 20)),
+                    textStyle: const TextStyle(fontSize: 18)),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const RegisterPage()));
@@ -154,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     backgroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 20)),
+                    textStyle: const TextStyle(fontSize: 18)),
                 onPressed: () => _signOut(),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
