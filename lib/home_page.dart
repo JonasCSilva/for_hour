@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:for_hour/register_page.dart';
+
+import 'home_button.dart';
+import 'register_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,10 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Map<String, dynamic>> _entries = <Map<String, dynamic>>[
-    {'hours': 40, 'category': 'Course'},
-    {'hours': 60, 'category': 'Internship'}
-  ];
+  List<Map<String, dynamic>> _entries = <Map<String, dynamic>>[];
 
   num _hours = 0;
 
@@ -63,18 +62,11 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: const [
-                      Text('Olá Victor!',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w600)),
-                      Icon(Icons.account_circle_outlined,
-                          color: Colors.white, size: 40),
-                    ],
-                  ),
+                  const Text('Olá Victor!',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w600)),
                   const SizedBox(height: 20),
                   Container(
                       decoration: BoxDecoration(
@@ -107,72 +99,20 @@ class _HomePageState extends State<HomePage> {
                 ],
               ))),
       const SizedBox(height: 20),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          SizedBox(
-              height: 140,
-              width: 120,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    side:
-                        const BorderSide(width: 3.5, color: Color(0xff9b1536)),
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12), // <-- Radius
-                    ),
-                    backgroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 18)),
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const RegisterPage()));
-                },
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              color: const Color(0xff9b1536)),
-                          child: const Icon(
-                            Icons.add_outlined,
-                          )),
-                      const Text('Cadastrar',
-                          style: TextStyle(color: Colors.black))
-                    ]),
-              )),
-          SizedBox(
-              height: 140,
-              width: 120,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    side:
-                        const BorderSide(width: 3.5, color: Color(0xff9b1536)),
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    backgroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 18)),
-                onPressed: () => _signOut(),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              color: const Color(0xff9b1536)),
-                          child: const Icon(
-                            Icons.logout_outlined,
-                          )),
-                      const Text('Sign out',
-                          style: TextStyle(color: Colors.black))
-                    ]),
-              ))
-        ],
-      ),
+      Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+        HomeButton(
+          text: 'Cadastrar',
+          icon: Icons.add_outlined,
+          onPressed: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const RegisterPage()));
+          },
+        ),
+        HomeButton(
+            text: 'Sign out',
+            icon: Icons.logout_outlined,
+            onPressed: () => _signOut())
+      ]),
       const SizedBox(height: 20),
       Expanded(
         child: Material(
