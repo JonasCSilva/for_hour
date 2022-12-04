@@ -15,7 +15,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> _entries = <Map<String, dynamic>>[];
 
-  num _hours = 0;
+  num _registeredHours = 0;
+  num _validatedHours = 0;
 
   _signOut() async {
     await FirebaseAuth.instance.signOut();
@@ -23,22 +24,29 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    super.initState();
     FirebaseFirestore.instance
-        .collection("users/tIeMjnsFX2Ur69clWHgJvCxxltc2/certificates")
+        .collection(
+            "users/${FirebaseAuth.instance.currentUser!.uid}/certificates")
         .get()
         .then((event) {
-      final List<Map<String, dynamic>> test = [];
-      num test2 = 0;
+      final List<Map<String, dynamic>> entries = [];
+      num registeredHours = 0;
+      num validatedHours = 0;
       for (var doc in event.docs) {
-        test.add(doc.data());
-        test2 += doc.data()['hours'];
+        entries.add(doc.data());
+        num documentHours = doc.data()['hours'];
+        registeredHours += documentHours;
+        if (doc.data()['isValidated'] == true) {
+          validatedHours += documentHours;
+        }
       }
       setState(() {
-        _entries = test;
-        _hours = test2;
+        _entries = entries;
+        _registeredHours = registeredHours;
+        _validatedHours = validatedHours;
       });
     });
-    super.initState();
   }
 
   @override
@@ -81,18 +89,19 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const Text('Horas cadastradas'),
-                                  Text('${_hours.toString()}h',
+                                  Text('${_registeredHours.toString()}h / 238h',
                                       style: const TextStyle(
-                                          fontSize: 26,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.w700))
                                 ]),
                             Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Text('Horas Restantes'),
-                                  Text('${(238 - _hours).toString()}h',
+                                  const Text('Horas validadas'),
+                                  Text(
+                                      '${(_validatedHours).toString()}h / 238h',
                                       style: const TextStyle(
-                                          fontSize: 26,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.w700))
                                 ])
                           ]))
@@ -143,13 +152,13 @@ class _HomePageState extends State<HomePage> {
                             Text(_entries[index]['category'],
                                 style: const TextStyle(fontSize: 18)),
                             Text(
-                                _entries[index]['isValidadated'] == null
+                                _entries[index]['isValidated'] != true
                                     ? 'Não validado'
                                     : 'Validado',
                                 style: TextStyle(
                                     fontSize: 16,
                                     color:
-                                        _entries[index]['isValidated'] == null
+                                        _entries[index]['isValidated'] != true
                                             ? Colors.red
                                             : Colors.green))
                           ])),

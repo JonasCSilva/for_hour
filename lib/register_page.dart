@@ -1,8 +1,6 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
@@ -23,11 +21,12 @@ class _RegisterPageState extends State<RegisterPage> {
   final _categoryController = TextEditingController();
 
   PlatformFile? _file;
+  late String _id;
 
   _addCertificate() async {
     if (_formKey.currentState!.validate() && _file != null) {
       DocumentReference doc = await FirebaseFirestore.instance
-          .collection("users/tIeMjnsFX2Ur69clWHgJvCxxltc2/certificates")
+          .collection("users/$_id/certificates")
           .add({
         "hours": int.parse(_hoursController.text),
         "category": _categoryController.text,
@@ -68,8 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
   _upload(String id) async {
     if (_file?.bytes != null) {
       try {
-        final storageRef = FirebaseStorage.instance.ref('users/tIeMjnsFX2Ur69clWHgJvCxxltc2/$id');
-
+        final storageRef = FirebaseStorage.instance.ref('users/$_id/$id');
         await storageRef.putData(_file!.bytes!);
       } catch (e) {
         print(e);
@@ -77,6 +75,12 @@ class _RegisterPageState extends State<RegisterPage> {
     } else {
       throw Exception('No bytes!');
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _id = FirebaseAuth.instance.currentUser!.uid;
   }
 
   @override
@@ -154,9 +158,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             backgroundColor: const Color(0xff9b1536),
                             textStyle: const TextStyle(fontSize: 20)),
                         onPressed: () => _pickFile(),
-                        child: Text(_file != null ? 'Mudar certificado' :'Anexar certificado'),
+                        child: Text(_file != null
+                            ? 'Mudar certificado'
+                            : 'Anexar certificado'),
                       )),
-                  if (_file != null) Text('Nome do certificado: ${_file!.name!}'),
+                  if (_file != null)
+                    Text('Nome do certificado: ${_file!.name}'),
                   const Expanded(flex: 3, child: SizedBox.shrink()),
                   ConstrainedBox(
                       constraints:
