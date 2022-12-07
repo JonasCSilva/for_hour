@@ -17,6 +17,8 @@ class _HomePageState extends State<HomePage> {
 
   num _registeredHours = 0;
   num _validatedHours = 0;
+  String _name = 'Carregando...';
+  String _registration = 'Carregando...';
 
   _signOut() async {
     await FirebaseAuth.instance.signOut();
@@ -25,6 +27,15 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    FirebaseFirestore.instance
+        .doc("users/${FirebaseAuth.instance.currentUser!.uid}")
+        .get()
+        .then((documentSnapshot) {
+      setState(() {
+        _name = documentSnapshot.data()!['name'];
+        _registration = documentSnapshot.data()!['registration'];
+      });
+    });
     FirebaseFirestore.instance
         .collection(
             "users/${FirebaseAuth.instance.currentUser!.uid}/certificates")
@@ -70,12 +81,18 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Column(
                 children: [
-                  const Text('Olá Victor!',
-                      style: TextStyle(
+                  Text("Olá $_name!",
+                      style: const TextStyle(
                           color: Colors.white,
                           fontSize: 30,
                           fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
+                  Text("Matrícula: $_registration",
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400)),
+                  const SizedBox(height: 16),
                   Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
@@ -142,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                         borderRadius: BorderRadius.circular(12),
                         color: Colors.white,
                       ),
-                      height: 80,
+                      height: 60,
                       child: Center(
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -152,15 +169,19 @@ class _HomePageState extends State<HomePage> {
                             Text(_entries[index]['category'],
                                 style: const TextStyle(fontSize: 18)),
                             Text(
-                                _entries[index]['isValidated'] != true
-                                    ? 'Não validado'
-                                    : 'Validado',
+                                _entries[index]['isValidated'] == null
+                                    ? 'Em espera'
+                                    : _entries[index]['isValidated'] == true
+                                        ? 'Validado'
+                                        : 'Rejeitado',
                                 style: TextStyle(
                                     fontSize: 16,
-                                    color:
-                                        _entries[index]['isValidated'] != true
-                                            ? Colors.red
-                                            : Colors.green))
+                                    color: _entries[index]['isValidated'] ==
+                                            null
+                                        ? Colors.amber[800]
+                                        : _entries[index]['isValidated'] == true
+                                            ? Colors.green
+                                            : Colors.red))
                           ])),
                     );
                   },

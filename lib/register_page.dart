@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
-import 'package:for_hour/home_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -22,6 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   PlatformFile? _file;
   late String _id;
+  String _fileError = '';
 
   _addCertificate() async {
     if (_formKey.currentState!.validate() && _file != null) {
@@ -40,8 +40,13 @@ class _RegisterPageState extends State<RegisterPage> {
         content: Text('DocumentSnapshot added with ID: ${doc.id}'),
       ));
 
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const HomePage()));
+      Navigator.of(context).pop();
+    } else {
+      if (_file == null) {
+        setState(() {
+          _fileError = "Nenhum arquivo selecionado";
+        });
+      }
     }
   }
 
@@ -57,7 +62,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
 
     setState(() {
       _file = result?.files.first;
@@ -67,7 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
   _upload(String id) async {
     if (_file?.bytes != null) {
       try {
-        final storageRef = FirebaseStorage.instance.ref('users/$_id/$id');
+        final storageRef = FirebaseStorage.instance.ref('users/$_id/$id.${_file!.extension}');
         await storageRef.putData(_file!.bytes!);
       } catch (e) {
         print(e);
@@ -98,7 +103,6 @@ class _RegisterPageState extends State<RegisterPage> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxHeight: 500),
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Expanded(flex: 1, child: SizedBox.shrink()),
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -120,9 +124,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         controller: _hoursController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
+                            return 'Campo vazio';
                           } else if (double.tryParse(value) == null) {
-                            return 'Please enter a number';
+                            return 'Insira um número';
                           }
                           return null;
                         },
@@ -140,7 +144,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         controller: _categoryController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a value';
+                            return 'Campo vazio';
                           }
                           return null;
                         },
@@ -162,8 +166,11 @@ class _RegisterPageState extends State<RegisterPage> {
                             ? 'Mudar certificado'
                             : 'Anexar certificado'),
                       )),
-                  if (_file != null)
-                    Text('Nome do certificado: ${_file!.name}'),
+                  const SizedBox(height: 14),
+                  _file != null
+                      ? Text('Nome do certificado: ${_file!.name}')
+                      : Text(_fileError,
+                          style: const TextStyle(color: Colors.red)),
                   const Expanded(flex: 3, child: SizedBox.shrink()),
                   ConstrainedBox(
                       constraints:
@@ -177,7 +184,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       )),
                   const Expanded(flex: 1, child: SizedBox.shrink()),
                 ]),
-          )),
-    ));
+          ))),
+    );
   }
 }
