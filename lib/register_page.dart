@@ -62,7 +62,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf'], withData: true);
 
     setState(() {
       _file = result?.files.first;

@@ -1,16 +1,16 @@
-# for_hour
+## Membros
 
-A new Flutter project.
+#### Jonas Costa Silva, Matheus Eckel, Victor Baggio
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+Link do Repositório Web: https://github.com/JonasCSilva/for-hour__angular
+Link do Repositório Mobile: https://github.com/JonasCSilva/for_hour__flutter
+Link do site: https://for-hour.vercel.app
 
-A few resources to get you started if this is your first Flutter project:
+Logins:
+    Email: jonas0csilva@gmail.com
+    Senha: 123456
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    Email: teste@gmail.com
+    Senha: 123456
